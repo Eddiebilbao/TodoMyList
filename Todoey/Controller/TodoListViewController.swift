@@ -103,7 +103,7 @@ class TodoListViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-    
+    //loading Items
     func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil){
         let categoryPredicate = NSPredicate(format:"parentCategory.name MATCHES %@", selectedCategory!.name!)
         
