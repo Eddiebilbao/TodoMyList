@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        print(Realm.Configuration.defaultConfiguration.fileURL!)
+        //print(Realm.Configuration.defaultConfiguration.fileURL!)
         
      
         
@@ -25,13 +25,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let config = Realm.Configuration(
             // Set the new schema version. This must be greater than the previously used
             // version (if you've never set a schema version before, the version is 0).
-            schemaVersion: 3,
-         
+            schemaVersion: 4,
+
             // Set the block which will be called automatically when opening a Realm with
             // a schema version lower than the one set above
             migrationBlock: { migration, oldSchemaVersion in
                 // We haven’t migrated anything yet, so oldSchemaVersion == 2
-                if (oldSchemaVersion < 3) {
+                if (oldSchemaVersion < 4) {
                     // Nothing to do!
                     // Realm will automatically detect new properties and removed properties
                     // And will update the schema on disk automatically
@@ -44,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Now that we've told Realm how to handle the schema change, opening the file
         // will automatically perform the migration
         do {
-                   let realm = try Realm()
+            _ = try Realm()
 
             } catch {
                    print("Error initialising new Realm. \(error)")
@@ -65,12 +65,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
-    
-    func applicationWillTerminate(_ application: UIApplication) {
-        print("Here we terminating")
-       // self.saveContext()
-    }
-    
+//
+//    func applicationWillTerminate(_ application: UIApplication) {
+//        print("Here we terminating")
+//       // self.saveContext()
+//    }
+//
 
    
     @available(iOS 13.0, *)

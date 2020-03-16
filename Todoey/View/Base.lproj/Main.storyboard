@@ -6,7 +6,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Todoey-->
+        <!--Items-->
         <scene sceneID="BpB-dQ-gbU">
             <objects>
                 <tableViewController id="PbD-w8-Do7" customClass="TodoListViewController" customModule="Todoey" customModuleProvider="target" sceneMemberID="viewController">
@@ -37,18 +37,25 @@
                             <outlet property="delegate" destination="PbD-w8-Do7" id="EY8-1X-fAi"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Todoey" id="zF7-hj-aWh">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="ymw-lA-nxX">
-                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <connections>
-                                <action selector="addButtonPressed:" destination="PbD-w8-Do7" id="eXa-Fg-dVu"/>
-                            </connections>
-                        </barButtonItem>
+                    <navigationItem key="navigationItem" title="Items" id="zF7-hj-aWh">
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="add" id="ymw-lA-nxX">
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <action selector="addButtonPressed:" destination="PbD-w8-Do7" id="eXa-Fg-dVu"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="trash" id="mLB-Nf-Z6Q">
+                                <connections>
+                                    <action selector="deleteItemPressed:" destination="PbD-w8-Do7" id="GLA-Q0-BIS"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZFn-fO-pcN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2590" y="-327"/>
+            <point key="canvasLocation" x="2497" y="-327"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="AFW-ex-r0H">
@@ -74,7 +81,7 @@
             </objects>
             <point key="canvasLocation" x="1067" y="-327"/>
         </scene>
-        <!--Items-->
+        <!--Todoey-->
         <scene sceneID="cJ0-7R-jdr">
             <objects>
                 <tableViewController id="yqU-qV-eUP" customClass="CategoryViewController" customModule="Todoey" customModuleProvider="target" sceneMemberID="viewController">
@@ -97,7 +104,7 @@
                             <outlet property="delegate" destination="yqU-qV-eUP" id="d8q-hy-CjJ"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Items" id="hAs-iJ-5d4">
+                    <navigationItem key="navigationItem" title="Todoey" id="hAs-iJ-5d4">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="LKh-T0-fsX">
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>

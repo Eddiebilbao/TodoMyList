@@ -19,6 +19,7 @@ class TodoListViewController: UITableViewController {
             loadItems()
         }
     }
+    var selectedItemPath : IndexPath?
     
    // let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -50,8 +51,18 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        //toDoItems![indexPath.row].done =  !toDoItems![indexPath.row].done
-        //saveItems()
+
+        if let item = toDoItems?[indexPath.row] {
+            do {
+                try realm.write {
+                    item.done =  !item.done
+                    self.selectedItemPath = indexPath
+                }
+            }catch {
+                print("Error saving done status, \(error)")
+            }
+        }
+        tableView.reloadData()
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -68,13 +79,15 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) {
             // what will happen once the user clicks the Add Item button on our UIAlert
             (action) in
-            
+            if textField.text! !=  "" {
             if let currentCategory = self.selectedCategory {
                 do {
                     
                     try self.realm.write {
                         let newItem = Item()
                         newItem.title = textField.text!
+                        newItem.dateCreated = Date()
+                        print(newItem.dateCreated!)
                         currentCategory.items.append(newItem)
                     }
                     } catch {
@@ -82,6 +95,8 @@ class TodoListViewController: UITableViewController {
                     }
             }
             self.tableView.reloadData()
+            }
+            
         }
         
         alert.addTextField {
@@ -89,10 +104,34 @@ class TodoListViewController: UITableViewController {
                 alertTextField.placeholder = "Create New Item"
                 textField = alertTextField
         }
-        
         alert.addAction(action)
         present(alert,animated: true, completion: nil)
     }
+    
+   
+    
+    
+    @IBAction func deleteItemPressed(_ sender: UIBarButtonItem) {
+        
+        if let indexPath = selectedItemPath {
+                if  let  item = toDoItems?[indexPath.row] {
+                        print("delete item: \(item.title)")
+                        if item.done == true {
+                            deleteItem(item: item)
+                        }
+                    
+                } else{
+                        print("Error no more item to delete")
+                }
+            } 
+        
+    }
+        
+    
+        
+
+    
+    
     
 //MARK: - Model Manipulation Methods
     
@@ -117,36 +156,49 @@ class TodoListViewController: UITableViewController {
         tableView.reloadData()
      }
     
-    
+   
+    func deleteItem(item: Item) {
+       // for item in selectedArray.map(deleteItem(item: item))
+            do {
+                try realm.write {
+                    realm.delete(item)
+
+                }
+            } catch {
+                print("Error deleting item, \(error)")
+            }
+        tableView.reloadData()
+    }
+     
+   
 }
+
+
 
 //MARK: - Searchbar Delegate Method
 
-//extension TodoListViewController: UISearchBarDelegate{
-//
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        let request : NSFetchRequest<Item> = Item.fetchRequest()
-//
-//        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
-//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//
-//        loadItems(with: request,predicate: predicate)
-//    }
-//
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        if searchBar.text!.count == 0 {
-//            loadItems()
-//            DispatchQueue.main.async {
-//                searchBar.resignFirstResponder() // dissmiss keyboard
-//            }
-//
-//        }
-//
-//    }
-//
-//
-//
-//
-//
-//}
+extension TodoListViewController: UISearchBarDelegate{
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        toDoItems = toDoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
+        tableView.reloadData()
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text!.count == 0 {
+            loadItems()
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder() // dissmiss keyboard
+            }
+
+        }
+
+    }
+
+
+
+
+
+}
 
