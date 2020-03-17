@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class TodoListViewController: UITableViewController {
+class TodoListViewController: SwipeTableViewController {
     
     var toDoItems : Results<Item>?
     let realm = try! Realm()
@@ -27,6 +27,7 @@ class TodoListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
     }
     
    
@@ -36,7 +37,8 @@ class TodoListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        //let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         if let item = toDoItems?[indexPath.row] {
             cell.textLabel?.text = item.title
             cell.accessoryType = item.done ? .checkmark : .none
@@ -108,24 +110,7 @@ class TodoListViewController: UITableViewController {
         present(alert,animated: true, completion: nil)
     }
     
-   
-    
-    
-    @IBAction func deleteItemPressed(_ sender: UIBarButtonItem) {
-        
-        if let indexPath = selectedItemPath {
-                if  let  item = toDoItems?[indexPath.row] {
-                        print("delete item: \(item.title)")
-                        if item.done == true {
-                            deleteItem(item: item)
-                        }
-                    
-                } else{
-                        print("Error no more item to delete")
-                }
-            } 
-        
-    }
+
         
     
         
@@ -134,20 +119,6 @@ class TodoListViewController: UITableViewController {
     
     
 //MARK: - Model Manipulation Methods
-    
-//    func saveItems(item: Item){
-//
-//        do {
-//            try realm.write {
-//                realm.add(item)
-//
-//                }
-//        } catch {
-//                print("Error saving context \(error)")
-//        }
-//        self.tableView.reloadData()
-//    }
-//
    
         //loading Items
     func loadItems(){
@@ -157,19 +128,20 @@ class TodoListViewController: UITableViewController {
      }
     
    
-    func deleteItem(item: Item) {
-       // for item in selectedArray.map(deleteItem(item: item))
+    
+    //MARK:- Delete From Swipe
+    
+    override func updateModel(at indexPath: IndexPath) {
+        if let itemForDeletion = self.toDoItems?[indexPath.row]{
             do {
-                try realm.write {
-                    realm.delete(item)
-
+                try self.realm.write{
+                    self.realm.delete(itemForDeletion)
                 }
             } catch {
                 print("Error deleting item, \(error)")
             }
-        tableView.reloadData()
+        }
     }
-     
    
 }
 
